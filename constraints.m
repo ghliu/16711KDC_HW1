@@ -2,7 +2,7 @@
 function [ineq_violations,eq_violations]=constraints(x)
 % TODO add obstacle contraints.
 
-global numLink obs posGoal;
+global numLink Obs posGoal;
 
 pos = fk(x, false);
 

@@ -21,7 +21,8 @@ function [r, p, y] = part1( target, link_length, min_roll, max_roll, min_pitch, 
 r = 0; p = 0; y = 0;
 
 global numLink lenLink posLink 
-global maxJoint minJoint obs posGoal;
+global numObs Obs
+global maxJoint minJoint  posGoal;
 
 lenLink = link_length;
 numLink = length(link_length);
@@ -30,7 +31,8 @@ posLink = zeros(3, numLink+1); % end-point position of each link in global frame
 
 maxJoint = [max_roll ; max_pitch; max_yaw]
 minJoint = [min_roll ; min_pitch; min_yaw]
-obs = obstacles
+Obs = obstacles
+numObs = size(obstacles,1);
 posGoal = target
 
 initdraw;
@@ -40,14 +42,9 @@ initdraw;
 % initialize
 p0 = zeros(numLink*3, 1);
 
-options = optimset('Display','iter','MaxFunEvals',1000000,'Algorithm','sqp');
-lb = -pi * ones(numLink,1);
-ub =  pi * ones(numLink,1);
-A = [eye(length(p0)); eye(length(p0))];
-b = [maxJoint ; -minJoint];
-
 % do optimization
-[x,fval,exitflag]=fmincon(@criterion,p0,A,b,[],[],lb,ub,@constraints,options);
+options = optimset('Display','iter','MaxFunEvals',1000000,'Algorithm','sqp');
+[x,fval,exitflag]=fmincon(@criterion,p0,[],[],[],[],minJoint,maxJoint,@constraints,options);
 
 % report solution
 if exitflag == -2,

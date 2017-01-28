@@ -12,7 +12,7 @@ min_pitch = -pi * ones(numLink,1);
 max_pitch = pi * ones(numLink,1);
 min_yaw = -pi * ones(numLink,1);
 max_yaw =  pi * ones(numLink,1);
-obstacles = [];
+obstacles = [0.5 0 0 0.1];
 
 
 [r, p, y] = part1( target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw, max_yaw, obstacles );
