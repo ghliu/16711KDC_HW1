@@ -11,11 +11,11 @@ color0 = [0 0 0];
 % color3 = [0 1 0];
 % color4 = [1 0 1];
 
-set(animation,'name','My Robot','Position',[20 100 500 500]);
+set(animation,'name','My Robot','Position',[20 100 800 800]);
 ylabel.String = 'Y-axis'; ylabel.FontSize = 12;
 xlabel.String = 'Y-axis'; xlabel.FontSize = 12;
 zlabel.String = 'Y-axis'; zlabel.FontSize = 12;
-h_axes = axes('Parent',animation,'Units','Pixels','Position',[0 0 500 500],...
+h_axes = axes('Parent',animation,'Units','Pixels',...
     'Ylim',[-1.0 1.0],'Xlim',[-1.0 1.0], 'zlim', [-1.0 1.0], ...
     'YGrid', 'on', 'XGrid', 'on', 'ZGrid', 'on');
 h_axes.YLabel.String = 'y';

@@ -7,16 +7,17 @@ function pos = fk(x, update)
 global numLink lenLink posLink;
 
 % parse input
-[r p y] = parseInput(x);
+[r p y] = parseInput(x)
 
 % forward kinematic
+% quaternion
 R = build_rotation_matrix(r, p, y);
+q = mat2quat(R(:,:,numLink));
+
+% pos
 pos = [0 0 0]';
-q = [1 0 0 0]';
 for i = 1:numLink,
-    % quaternion TODO
-        
-    % pos
+    
     pos = pos + R(:,:,i)*([lenLink(i) 0 0]')
     if update, posLink(:,i+1) = pos; end;
     
@@ -51,5 +52,51 @@ for i = 1:numLink,
         R(:,:,i+1) = R(:,:,i);
     end;
 end;
+
+end
+
+function q = mat2quat(R)
+
+q0 = ( R(1,1) + R(2,2) + R(3,3) + 1) / 4;
+q1 = ( R(1,1) - R(2,2) - R(3,3) + 1) / 4;
+q2 = (-R(1,1) + R(2,2) - R(3,3) + 1) / 4;
+q3 = (-R(1,1) - R(2,2) + R(3,3) + 1) / 4;
+if(q0 < 0), q0 = 0; end;
+if(q1 < 0), q1 = 0; end;
+if(q2 < 0), q2 = 0; end;
+if(q3 < 0), q3 = 0; end;
+q0 = sqrt(q0);
+q1 = sqrt(q1);
+q2 = sqrt(q2);
+q3 = sqrt(q3);
+if(q0 >= q1 && q0 >= q2 && q0 >= q3),
+    q0 = q0*1;
+    q1 = q1*sign(R(3,2) - R(2,3));
+    q2 = q2*sign(R(1,3) - R(3,1));
+    q3 = q3* sign(R(2,1) - R(1,2));    
+else if (q1 >= q0 && q1 >= q2 && q1 >= q3),
+    q0 = q0* sign(R(3,2) - R(2,3));
+    q1 = q1* +1;
+    q2 = q2* sign(R(2,1) + R(1,2));
+    q3 = q3* sign(R(1,3) + R(3,1));
+else if(q2 >= q0 && q2 >= q1 && q2 >= q3),
+    q0 = q0* sign(R(1,3) - R(3,1));
+    q1 = q1* sign(R(2,1) + R(1,2));
+    q2 = q2* +1;
+    q3 = q3* sign(R(3,2) + R(2,3));
+else if(q3 >= q0 && q3 >= q1 && q3 >= q2),
+    q0 = q0* sign(R(2,1) - R(1,2));
+    q1 = q1* sign(R(3,1) + R(1,3));
+    q2 = q2* sign(R(3,2) + R(2,3));
+    q3 = q3* +1;
+else
+    printf('coding error\n');
+    end;
+    end;
+    end;
+end;
+
+q = [q0, q1, q2, q3]';
+q = q / norm(q);
 
 end
