@@ -9,8 +9,12 @@ pos = fk(x, true);
 
 draw3();
 
-score = (pos - posGoal)'*(pos - posGoal) + 0.05*(x - maxJoint)'*(x - maxJoint) ...
-    + 0.05*(x - minJoint)'*(x - minJoint);
+% stay way from max/min joint
+score = [];
+score(1) = 0.00005*(x - mean(maxJoint + minJoint))'*(x - mean(maxJoint + minJoint));
+score(2) = (pos - posGoal)'*(pos - posGoal);
+
+score = sum(score);
 
 % final end
 end

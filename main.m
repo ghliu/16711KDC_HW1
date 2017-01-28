@@ -2,9 +2,9 @@
 
 % clear all;
 
-
-target = [1 1 1 1 0 0 0];
-link_length = [0.5 0.5 0.5]';
+% reach the position (0.5,0.5,0) with r=0, p=0, y=90 at the end point
+target = [0.5 0.5 0 0.707 0 0 0.707]';
+link_length = [0.4 0.3 0.3]';
 numLink = length(link_length);
 min_roll = -pi * ones(numLink,1);
 max_roll =  pi * ones(numLink,1);

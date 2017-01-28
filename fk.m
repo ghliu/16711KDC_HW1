@@ -7,7 +7,7 @@ function pos = fk(x, update)
 global numLink lenLink posLink;
 
 % parse input
-[r p y] = parseInput(x)
+[r p y] = parseInput(x);
 
 % forward kinematic
 % quaternion
@@ -18,7 +18,7 @@ q = mat2quat(R(:,:,numLink));
 pos = [0 0 0]';
 for i = 1:numLink,
     
-    pos = pos + R(:,:,i)*([lenLink(i) 0 0]')
+    pos = pos + R(:,:,i)*([lenLink(i) 0 0]');
     if update, posLink(:,i+1) = pos; end;
     
 end;
@@ -90,7 +90,7 @@ else if(q3 >= q0 && q3 >= q1 && q3 >= q2),
     q2 = q2* sign(R(3,2) + R(2,3));
     q3 = q3* +1;
 else
-    printf('coding error\n');
+    fprintf('coding error\n');
     end;
     end;
     end;

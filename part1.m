@@ -28,30 +28,39 @@ numLink = length(link_length);
 posLink = zeros(3, numLink+1); % end-point position of each link in global frame,
                                % include world origin
 
-maxJoint = [max_roll ; max_pitch; max_yaw];
-minJoint = [min_roll ; min_pitch; min_yaw];
-obs = obstacles;
-posGoal = target;
+maxJoint = [max_roll ; max_pitch; max_yaw]
+minJoint = [min_roll ; min_pitch; min_yaw]
+obs = obstacles
+posGoal = target
 
-%%
 initdraw;
 
 %% solve
 
+% initialize
 p0 = zeros(numLink*3, 1);
-p0 = rand(numLink*3, 1)*pi;
-fk(p0, true);
-draw3();
 
-% options = optimset('Display','iter','MaxFunEvals',1000000,'Algorithm','sqp');
-% 
-% lb = -pi * ones(numLink,1);
-% ub =  pi * ones(numLink,1);
-% 
-% % do optimization
-% A = eye(length(p0));
-% b = [maxJoint ; -minJoint];
-% [answer,fval,exitflag]=fmincon(@criterion,p0,A,b,[],[],lb,ub,@constraints,options);
+options = optimset('Display','iter','MaxFunEvals',1000000,'Algorithm','sqp');
+lb = -pi * ones(numLink,1);
+ub =  pi * ones(numLink,1);
+A = [eye(length(p0)); eye(length(p0))];
+b = [maxJoint ; -minJoint];
+
+% do optimization
+[x,fval,exitflag]=fmincon(@criterion,p0,A,b,[],[],lb,ub,@constraints,options);
+
+% report solution
+if exitflag == -2,
+    fprintf('No feasible point was found.\n');
+else if exitflag == 0,
+    fprintf('Number of iterations exceeded options.MaxIterations or number of function.\n');
+else
+    exitflag
+    fval
+    [r p y] = parseInput(x)
+    end
+end
+
 
 
 end
