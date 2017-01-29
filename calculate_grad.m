@@ -4,7 +4,7 @@ function jaco_value = calculate_grad(x)
 	%create symbolic vars
 	x_syms = sym('x',size(x));
 
-	[r p y] = parseInput(x);
+	[r p y] = parseInput(x_syms);
 
 	% forward kinematic
 	% quaternion
@@ -24,8 +24,8 @@ function jaco_value = calculate_grad(x)
 	pos = [pos ; q];
 
 	jaco = jacobian(pos,x_syms);
-	x_syms = x;
-	jaco_value = double(subs(jaco));
+% 	x_syms = x;
+	jaco_value = double(subs(jaco,x_syms,x));
 
 
 end

@@ -18,7 +18,7 @@ function [r, p, y] = part1( target, link_length, min_roll, max_roll, min_pitch, 
 
 %% 
 
-method = 'cmaes';
+method = 'sqp';
 r = 0; p = 0; y = 0;
 
 global numLink lenLink posLink 

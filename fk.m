@@ -11,7 +11,7 @@ global numLink lenLink posLink;
 
 % forward kinematic
 % quaternion
-R = build_rotation_matrix(r, p, y);
+R = double(build_rotation_matrix(r, p, y));
 q = mat2quat(R(:,:,numLink));
 
 % pos
