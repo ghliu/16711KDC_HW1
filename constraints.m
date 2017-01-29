@@ -6,7 +6,7 @@ global numLink posLink
 global numObs Obs
 global posGoal
 
-pos = fk(x, true);
+pos = fk(x);
 draw3();
 
 % be at the target
@@ -16,16 +16,6 @@ eq_violations = [];
 
 ineq_violations=[]; % should be negative
 
-% for i = 1:numLink,
-%     x1 = posLink(:,i);
-%     x2 = posLink(:,i+1);
-%     for j = 1:numObs,
-%         d = collision_check(Obs(j, 1:3)', x1, x2, Obs(j, end));
-%         ineq_violations((i-1)*numObs+j) = d;
-%     end;
-% end;
-
-% testing
 for i = 1:numObs,
     x1 = posLink(:,1:end-1);
     x2 = posLink(:,2:end);
@@ -33,38 +23,30 @@ for i = 1:numObs,
     ineq_violations((i-1)*numLink+1:i*numLink) = d;    
 end;
 
-% ineq_violations
+
 end
 %% final end
 function d = collision_check2(x0, x1, x2, r)
     global numLink
-
+    
+    d = -1 * ones(1,numLink);
     x12 = x1 - x2;
     x20 = bsxfun(@minus, x2, x0);
     x10 = bsxfun(@minus, x1, x0);
     
     dist2link = sqrt(sum(cross(x12, x20).^2)) ./ sqrt(sum(x12.^2)); % colomn-wise norm
-    proj1 = bsxfun(@times, x1, dot(x10, x12) ./ dot(x12, x12));
-    proj2 = bsxfun(@plus, proj1, x1-x2);
+    dist2x1 = sqrt(sum(x10.^2));
+    dist2x2 = sqrt(sum(x20.^2));
     
-    d = -1 * ones(1,numLink);
-    d(find((dist2link < r ) & all(proj1 ./ proj2 < 0))) = 1;
+    proj1 = bsxfun(@times, x12, dot(x10, x12) ./ dot(x12, x12));
+    proj2 = proj1 + x12;
     
-end
-
-function d = collision_check(x0, x1, x2, r)
-
-d = -1;
-
+    % collision happens when 
+    % 1. either x10 or x20 is smaller than radius
+    % 2. dist2link is smaller than radius, and projection of centeor
+    %    to link is between link end point x1, x2
+    d(find((dist2x1 < r) | (dist2x2 < r))) = 1;
+    d(find((dist2link < r ) & all(proj1 ./ proj2 > 0))) = 1;
     
-x12 = x1-x2;
-
-dist2link = norm(cross(x12, x2-x0)) / norm(x12);
-proj = x1 + dot(x1-x0,x12) / dot(x12,x12) * x12;
-
-if dist2link < r && all((proj - x1)./(proj - x2) < 0),
-    d = 1;
-end
-
 end
 
