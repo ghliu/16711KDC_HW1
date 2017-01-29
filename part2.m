@@ -1,5 +1,5 @@
-function [r, p, y] = part1( target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw, max_yaw, obstacles )
-%% Function that uses optimization to do inverse kinematics for a snake robot
+function [r, p, y] = part2( target, link_length, min_roll, max_roll, min_pitch, max_pitch, min_yaw, max_yaw, obstacles )
+%% Function that uses analytic gradients to do optimization for inverse kinematics in a snake robot
 
 %%Outputs 
   % [r, p, y] = roll, pitch, yaw vectors of the N joint angles
@@ -15,10 +15,6 @@ function [r, p, y] = part1( target, link_length, min_roll, max_roll, min_pitch, 
     %    obstacle. M obstacles.
 
 % Your code goes here.
-
-%% 
-
-method = 'cmaes';
 r = 0; p = 0; y = 0;
 
 global numLink lenLink posLink 
@@ -31,7 +27,7 @@ posLink = zeros(3, numLink+1); % end-point position of each link in global frame
 
 maxJoint = [max_roll ; max_pitch; max_yaw];
 minJoint = [min_roll ; min_pitch; min_yaw];
-obs = obstacles
+obs = obstacles;
 posGoal = target
 
 initdraw;
@@ -40,22 +36,16 @@ initdraw;
 
 % initialize
 p0 = zeros(numLink*3, 1);
-
-if ~strcmp(method,'cmaes')
-options = optimset('Display','iter','MaxFunEvals',1000000,'Algorithm','active-set');
+p0(1,1) = 1;
+options = optimoptions('fmincon','Display','iter','MaxFunEvals',1000000,...
+                    'Algorithm','interior-point',...
+                    'SpecifyObjectiveGradient',true);
 
 A = [eye(length(p0)); eye(length(p0))];
 b = [maxJoint ; -minJoint];
 
 % do optimization
 [x,fval,exitflag]=fmincon(@criterion,p0,A,b,[],[],[],[],@constraints,options);
-else
-opt = cmaes;  
-opt.LBounds = minJoint;
-opt.UBounds = maxJoint;
-opt.DispModulo = 1;
-[x, fval, exitflag] = cmaes('criterion',p0,[],opt)
-end
 
 % report solution
 if exitflag == -2,
@@ -70,7 +60,4 @@ else
 end
 
 
-
 end
-
-
