@@ -1,8 +1,24 @@
-part2 
+##Part 1##
+- Based on the origianl template code, several further optimizations were done. Including
+   1. Global variable ```posLink```, which represents the end-point ```(x,y,z)``` position of each link in global frame, was directly stored at the time when we solved forward kinematic. Such variable is directly used in ```draw3()``` function for visualization.
+
+   2. Usage of matrix representation of 3D Euler rotation matrix in function ```build_rotation_matrix(r,p,y)```, and collision check in function ```collision check```
+
+- Obstacle collision check is done by recursively calculating the minimum distance from center of each sphere to each link.
+
+- If target position is not reachable, it would be projected to the nearest point specified by robot maximum reachable radius. In such way we defined the "close" term to Euclidean distance.
+
+- Demo Video:
+
+[![3D Inverse Kinematics Using Matlab Optimization
+](http://img.youtube.com/vi/-VxtBApTVHA/0.jpg)](https://youtu.be/-VxtBApTVHA)
+
+##Part 2##
 
 
-part 3
-interior-point
+##Part 3##
+- interior-point
+```
 number of iterations:54
 fval =
 
@@ -33,8 +49,10 @@ First order optimality norm of step
     8.745e-07    5.770e-04
 
 run-time:47.728608 seconds
+```
 
-sqp 
+- sqp
+```
 number of iterations:49
 fval =
 
@@ -64,9 +82,10 @@ First order optimality norm of step
 1.940e-04   2.624e-07
 
 run-time: 41.894020 seconds
+```
 
-
-active-set
+- active-set
+```
 number of iterations:16
 
 fval =
@@ -98,8 +117,10 @@ First order optimality norm of step
 0.000485
 
 run-time:15.311468 seconds
+```
 
-CMA-ES
+- CMA-ES
+```
 number of iterations:333
 fval =
 
@@ -126,3 +147,7 @@ y =
    -1.6406
 
 run-time: 291.663268 seconds
+```
+
+What did you do? Why did it work? What didn't work and why?
+##Part 4##
