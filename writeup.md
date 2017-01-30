@@ -35,7 +35,7 @@ NOTE: Matlab version is  2016a
 
 - Demo video
 [![3D Inverse Kinematics Using Matlab Optimization with exact gradients
-](https://youtu.be/ljXw9X1Hqpg)
+](http://img.youtube.com/vi/ljXw9X1Hqpg/0.jpg)](https://youtu.be/ljXw9X1Hqpg)
 ```
 Number of iterations:155
 fval = 1.0713e-04
@@ -46,7 +46,7 @@ y =[-0.1998, 1.4005, 0.3696]
 Run-time: 3447.548609 sec
 ```
 Most of time was taken to calculate the exact gradients. The conversion was slower in terms of iterations as compared to method without exact gradients. The motion of the robot is smooth in both the methods. 
-[!graph](graph2.jpg)
+![graph](graph2.jpg)
 NOTE: This experiment was conducted without obstacles
 ###Part 3###
 | Method        | Iterations| f-val  | Time(sec)|
