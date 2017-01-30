@@ -1,6 +1,6 @@
 function R = build_rotation_matrix(r, p, y)
 
-global numLink
+global numLink symbolic
 
 Rz(1,1,:) = cos(y);
 Rz(1,2,:) = -sin(y);
@@ -40,7 +40,13 @@ Rx(3,1,:) = zeros(size(r));
 Rx(3,2,:) = sin(r);
 Rx(3,3,:) = cos(p);
 
-R = sym('R',size(Rx)); R(:,:,1) = eye(3,3);
+% build R
+if symbolic
+R = sym('R',size(Rx));
+else
+R = zeros(3,3,numLink);
+end
+R(:,:,1) = eye(3,3);
 for i = 1:numLink,
     % recursive calculate R1, R1R2, R1R2R3, ...
     R(:,:,i) = R(:,:,i)*Rx(:,:,i)*Ry(:,:,i)*Rz(:,:,i);

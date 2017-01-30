@@ -5,7 +5,6 @@ global posGoal;
 global numLink posLink
 global h_axes drawLink drawGoal
 
-
 for i = 1:numLink,
     set(drawLink{i},'Parent',h_axes,...
         'Xdata', posLink(1, i:i+1), ...
@@ -20,6 +19,8 @@ set(drawGoal,'Parent',h_axes,...
     'Zdata', [posGoal(3)-0.02 posGoal(3)+0.01], ...
     'visible','on');
 
+axis equal
+axis([-1 1 -1 1 -1 1]);
 drawnow
 
 % debug
