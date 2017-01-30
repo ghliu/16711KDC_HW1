@@ -1,5 +1,31 @@
 part2 
+number of iterations:155
+fval =
 
+   1.0713e-04
+
+
+r =
+
+    0.0061
+    0.0125
+    0.0187
+
+
+p =
+
+   -0.0308
+    0.0057
+    0.0281
+
+
+y =
+
+   -0.1998
+    1.4005
+    0.3696
+
+run-time: 3447.548609 seconds
 
 part 3
 interior-point
