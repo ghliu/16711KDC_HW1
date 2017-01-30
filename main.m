@@ -13,13 +13,13 @@ min_pitch = -pi * ones(numLink,1);
 max_pitch = pi * ones(numLink,1);
 min_yaw = -pi * ones(numLink,1);
 max_yaw =  pi * ones(numLink,1);
-obstacles = [-0.5 0.3 0.3 0.1; ...
-             0.5 -0.3 -0.3 0.2];
-
+% obstacles = [-0.5 0.3 0.3 0.1; ...
+%              0.5 -0.3 -0.3 0.2];
+obstacles = [];
 global method localMin
-method = 'sqp'; % 'active-set', 'cmaes', 'interior-point', 'sqp', 'trust-region-reflective'
+method = 'interior-point'; % 'active-set', 'cmaes', 'interior-point', 'sqp', 'trust-region-reflective'
                 % cmaes is supported in part1
-localMin = true; % boolean flag for part 4
+localMin = false; % boolean flag for part 4
 
 %% part 1, 3
 
