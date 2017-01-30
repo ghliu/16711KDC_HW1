@@ -1,4 +1,20 @@
-##Part 1##
+#16-711: Kinematics, Dynamic Systems, and Control#
+- Spring 2017
+- HW1
+- Team members: 
+   - Guan-Horng Liu (guanhorl@andrew.cum.edu)
+   - Arpit Agarwal ()
+
+##Usage##
+- Run the script ```main```.
+- Global varaibles:
+   - ```method```: algorithm for solving optimization problem. 
+   - ```localMin```: enable multiple local minimums searching in part 4.
+
+##Probelm Set##
+
+
+###Part 1###
 - Based on the origianl template code, several further optimizations were done. Including
    1. Global variable ```posLink```, which represents the end-point ```(x,y,z)``` position of each link in global frame, was directly stored at the time when we solved forward kinematic. Such variable is directly used in ```draw3()``` function for visualization.
 
@@ -13,10 +29,10 @@
 [![3D Inverse Kinematics Using Matlab Optimization
 ](http://img.youtube.com/vi/-VxtBApTVHA/0.jpg)](https://youtu.be/-VxtBApTVHA)
 
-##Part 2##
+###Part 2###
 
 
-##Part 3##
+###Part 3###
 - interior-point
 ```
 number of iterations:54
@@ -148,6 +164,6 @@ y =
 
 run-time: 291.663268 seconds
 ```
+###Part 4###
+In order to search for multiple local minimums, we utilized the ```MultiStart``` object in Matlab. Set the global variable ```localMin``` to ```true``` to enable multiple local minimums searching.
 
-What did you do? Why did it work? What didn't work and why?
-##Part 4##
