@@ -18,13 +18,14 @@ function [r, p, y] = part1( target, link_length, min_roll, max_roll, min_pitch, 
 
 %% 
 
-method = 'sqp';
 r = 0; p = 0; y = 0;
 
+global method symbolic localMin
 global numLink lenLink posLink 
 global numObs Obs
 global maxJoint minJoint  posGoal;
 
+symbolic = false;
 lenLink = link_length;
 numLink = length(link_length);
 posLink = zeros(3, numLink+1); % end-point position of each link in global frame,
@@ -53,9 +54,23 @@ p0 = zeros(numLink*3, 1);
 
 % do optimization
 if ~strcmp(method,'cmaes')
+options = optimset('Display','iter','MaxFunEvals',1000000,'Algorithm',method);
+problem = createOptimProblem('fmincon',...
+    'objective',@criterion,...
+    'x0',p0,'Aeq',[],'beq', [],'Aineq',[],'bineq',[], ...
+    'lb', minJoint, 'ub', maxJoint, 'nonlcon', @constraints, ...
+    'options', options);
 
-options = optimset('Display','iter','MaxFunEvals',1000000,'Algorithm','active-set');
-[x,fval,exitflag]=fmincon(@criterion,p0,[],[],[],[],minJoint,maxJoint,@constraints,options);
+if ~localMin
+    [x,fval,exitflag]=fmincon(@criterion,p0,[],[],[],[],minJoint,maxJoint,@constraints,options);
+else
+    ms = MultiStart;
+    [x,fval,exitflag,output,manymins] = run(ms,problem,5);
+    for i = 1:min(3, length(manymins))
+        g=sprintf('%f ', manymins(i).X);
+    	fprintf('\n\n #%d answer:\n [%s ]%s \n\n', i, g);
+    end
+end
 
 else
     

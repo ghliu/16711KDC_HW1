@@ -21,7 +21,7 @@ for i = 1:numObs,
         y*Obs(i,end) + Obs(i,2), ...
         z*Obs(i,end) + Obs(i,3), ...
         'Parent',h_axes,'FaceColor',color,'Visible','on', 'FaceAlpha', 0.5, 'LineStyle', 'none');
-    
+    hold on
 end;
 
 drawGoal = line('Parent',h_axes,'Color',color0,'Visible','off','LineWidth',10);

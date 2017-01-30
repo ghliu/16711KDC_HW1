@@ -17,18 +17,29 @@ function [r, p, y] = part2( target, link_length, min_roll, max_roll, min_pitch, 
 % Your code goes here.
 r = 0; p = 0; y = 0;
 
+global method symbolic localMin
 global numLink lenLink posLink 
-global maxJoint minJoint obs posGoal;
+global numObs Obs
+global maxJoint minJoint  posGoal;
 
+symbolic = true;
 lenLink = link_length;
 numLink = length(link_length);
 posLink = zeros(3, numLink+1); % end-point position of each link in global frame,
                                % include world origin
 
-maxJoint = [max_roll ; max_pitch; max_yaw];
-minJoint = [min_roll ; min_pitch; min_yaw];
-obs = obstacles;
+maxJoint = [max_roll ; max_pitch; max_yaw]
+minJoint = [min_roll ; min_pitch; min_yaw]
+Obs = obstacles
+numObs = size(obstacles,1);
 posGoal = target
+
+% detect reachability
+ratio = sum(link_length)/norm(target(1:3));
+if ratio < 1,
+    fprintf('Target is too far and not reachable. Set to closer target. \n');
+    posGoal(1:3) = 0.9 * ratio * target(1:3);
+end
 
 initdraw;
 
@@ -38,14 +49,29 @@ initdraw;
 p0 = zeros(numLink*3, 1);
 p0(1,1) = 1;
 options = optimoptions('fmincon','Display','iter','MaxFunEvals',1000000,...
-                    'Algorithm','interior-point',...
+                    'Algorithm',method,...
                     'SpecifyObjectiveGradient',true);
 
-A = [eye(length(p0)); eye(length(p0))];
-b = [maxJoint ; -minJoint];
+problem = createOptimProblem('fmincon',...
+    'objective',@criterion,...
+    'x0',p0,'Aeq',[],'beq', [],'Aineq',[],'bineq',[], ...
+    'lb', minJoint, 'ub', maxJoint, 'nonlcon', @constraints, ...
+    'options', options);
 
 % do optimization
-[x,fval,exitflag]=fmincon(@criterion,p0,A,b,[],[],[],[],@constraints,options);
+if ~localMin
+    [x,fval,exitflag]=fmincon(@criterion,p0,[],[],[],[],minJoint,maxJoint,@constraints,options);
+else
+    ms = MultiStart;
+    [x,fval,exitflag,output,manymins] = run(ms,problem,5);
+    for i = 1:min(3, length(manymins))
+        g=sprintf('%f ', manymins(i).X);
+    	fprintf('\n\n #%d answer:\n [%s ]%s \n\n', i, g);
+    end
+end
+
+
+% [x,fval,exitflag]=fmincon(@criterion,p0,[],[],[],[],minJoint,maxJoint,@constraints,options);
 
 % report solution
 if exitflag == -2,
