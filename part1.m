@@ -35,6 +35,13 @@ Obs = obstacles
 numObs = size(obstacles,1);
 posGoal = target
 
+% detect reachability
+ratio = sum(link_length)/norm(target(1:3));
+if ratio < 1,
+    fprintf('Target is too far and not reachable. Set to closer target. \n');
+    posGoal(1:3) = 0.9 * ratio * target(1:3);
+end
+
 initdraw;
 
 %% solve
@@ -44,7 +51,7 @@ p0 = zeros(numLink*3, 1);
 
 % do optimization
 options = optimset('Display','iter','MaxFunEvals',1000000,'Algorithm','sqp');
-[x,fval,exitflag]=fmincon(@criterion,p0,[],[],[],[],minJoint,maxJoint,@constraints,options);
+[x,fval,exitflag]=fmincon(@criterion,p0,[],[],[],[],[],[],@constraints,options);
 
 % report solution
 if exitflag == -2,
